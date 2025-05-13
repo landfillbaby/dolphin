@@ -23,6 +23,7 @@ struct CPUInfo
 
   bool HTT = false;
   int num_cores = 0;
+  int fastest_core = 0;
 
   bool bSSE3 = false;
   bool bSSSE3 = false;

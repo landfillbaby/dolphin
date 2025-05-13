@@ -122,8 +122,7 @@ void SetThreadAffinity(std::thread::native_handle_type thread, u32 mask)
 {
 #ifdef __APPLE__
   thread_policy_set(pthread_mach_thread_np(thread), THREAD_AFFINITY_POLICY, (integer_t*)&mask, 1);
-#elif (defined __linux__ || defined BSD4_4 || defined __FreeBSD__ || defined __NetBSD__) &&        \
-    !(defined ANDROID)
+#elif (defined __linux__ || defined BSD4_4 || defined __FreeBSD__ || defined __NetBSD__)
 #ifndef __NetBSD__
 #ifdef __FreeBSD__
   cpuset_t cpu_set;
@@ -136,7 +135,11 @@ void SetThreadAffinity(std::thread::native_handle_type thread, u32 mask)
     if ((mask >> i) & 1)
       CPU_SET(i, &cpu_set);
 
+#ifdef ANDROID
+  sched_setaffinity(pthread_gettid_np(thread), sizeof(cpu_set), &cpu_set);
+#else
   pthread_setaffinity_np(thread, sizeof(cpu_set), &cpu_set);
+#endif
 #else
   cpuset_t* cpu_set = cpuset_create();
 

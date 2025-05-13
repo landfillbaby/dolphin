@@ -8,6 +8,7 @@
 #include <queue>
 
 #include "AudioCommon/AudioCommon.h"
+#include "Common/CPUDetect.h"
 #include "Common/CommonTypes.h"
 #include "Common/Event.h"
 #include "Common/Thread.h"
@@ -118,6 +119,13 @@ void CPUManager::Run()
   if (Config::Get(Config::MAIN_TIME_TRACKING))
   {
     timing = std::thread(&CPUManager::StartTimePlayedTimer, this);
+  }
+
+  // Pin the thread to the fastest core
+  // if (Config::Get(Config::MAIN_THREAD_PINNING)) // TODO
+  {
+    u32 mask = static_cast<u32>(1) << cpu_info.fastest_core;
+    Common::SetCurrentThreadAffinity(mask);
   }
 
   std::unique_lock state_lock(m_state_change_lock);

@@ -37,6 +37,7 @@ add_library(common
   Config/Layer.h
   Contains.h
   CPUDetect.h
+  CPUDetectFastestCore.h
   Crypto/AES.cpp
   Crypto/AES.h
   Crypto/bn.cpp

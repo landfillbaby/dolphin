@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "Common/CPUDetect.h"
+#include "Common/CPUDetectFastestCore.h"
 
 #include <cstring>
 #include <fstream>
@@ -223,6 +224,8 @@ void CPUInfo::Detect()
   bFlushToZero = true;
 
   num_cores = std::max(static_cast<int>(std::thread::hardware_concurrency()), 1);
+
+  fastest_core = CPUDetectFastestCore(num_cores);
 
 #ifdef __APPLE__
   SysctlByName(&model_name, "machdep.cpu.brand_string");

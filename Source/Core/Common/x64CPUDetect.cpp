@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "Common/CPUDetect.h"
+#include "Common/CPUDetectFastestCore.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -116,6 +117,8 @@ void CPUInfo::Detect()
   // This should be much more reliable and easier than trying to get the number of cores out of the
   // CPUID data ourselves.
   num_cores = std::max(static_cast<int>(std::thread::hardware_concurrency()), 1);
+
+  fastest_core = CPUDetectFastestCore(num_cores);
 
   // Assume CPU supports the CPUID instruction. Those that don't can barely
   // boot modern OS anyway.
